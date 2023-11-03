@@ -14,7 +14,6 @@
 import os
 from unittest import mock
 
-import poptorch
 import pytest
 import torch
 from lightning_utilities.core.imports import package_available
@@ -67,6 +66,7 @@ def test_warning_if_ipus_not_used():
 
 
 def test_no_warning_strategy(tmpdir):
+    import poptorch
     with pytest.warns(None) as record:
         Trainer(default_root_dir=tmpdir, max_epochs=1, strategy=IPUStrategy(training_opts=poptorch.Options()))
     assert len(record) == 0
@@ -363,6 +363,7 @@ def test_autoreport(tmpdir):
 
 @pytest.mark.xfail(RuntimeError, reason="element 0 of tensors does not require grad and does not have ...")  # todo
 def test_manual_poptorch_dataloader(tmpdir):
+    import poptorch
     model_options = poptorch.Options()
 
     class IPUTestModel(IPUModel):
@@ -396,6 +397,7 @@ def test_manual_poptorch_dataloader(tmpdir):
 @pytest.mark.xfail(RuntimeError, reason="element 0 of tensors does not require grad and does not have ...")  # todo
 def test_manual_poptorch_opts(tmpdir):
     """Ensure if the user passes manual poptorch Options, we run with the correct object."""
+    import poptorch
     model = IPUModel()
     inference_opts = poptorch.Options()
     training_opts = poptorch.Options()
@@ -426,6 +428,7 @@ def test_manual_poptorch_opts_custom(tmpdir):
     We respect them in our poptorch options and the dataloaders.
 
     """
+    import poptorch
     model = IPUModel()
     training_opts = poptorch.Options()
     training_opts.deviceIterations(8)
@@ -478,6 +481,7 @@ def test_replication_factor(tmpdir):
     We set them correctly in the dataloaders.
 
     """
+    import poptorch
     strategy = IPUStrategy()
     trainer = Trainer(
         accelerator=IPUAccelerator(), devices=2, default_root_dir=tmpdir, fast_dev_run=True, strategy=strategy
@@ -519,6 +523,7 @@ def test_replication_factor(tmpdir):
 @pytest.mark.xfail()  # todo: assert strategy is COU
 def test_default_opts(tmpdir):
     """Ensure default opts are set correctly in the IPUStrategy."""
+    import poptorch
     model = IPUModel()
 
     trainer = Trainer(default_root_dir=tmpdir, accelerator=IPUAccelerator(), devices=1, fast_dev_run=True)
