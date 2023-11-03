@@ -626,7 +626,6 @@ def test_poptorch_models_at_different_stages(tmpdir):
         assert list(trainer.strategy.poptorch_models) == [stage]
 
 
-@pytest.mark.xfail(AssertionError, reason="not implemented on PL side")
 def test_devices_auto_choice_ipu():
     trainer = Trainer(accelerator="auto", devices="auto")
     assert trainer.num_devices == 4
