@@ -25,14 +25,23 @@ elif package_available("pytorch_lightning"):
 else:
     raise ModuleNotFoundError("You are missing `lightning` or `pytorch-lightning` package, please install it.")
 
-_POPTORCH_AVAILABLE = package_available("poptorch")
+_POPTORCH_AVAILABLE = package_available("poptorch") 
 
-if _POPTORCH_AVAILABLE:
+import os
+backend = os.getenv("TORCH_BACKEND")
+_TORCHBACKEND_AVAILABLE = package_available(backend) if backend is not None else False
+
+if _TORCHBACKEND_AVAILABLE:
+    import importlib
+    backend_module = importlib.import_module(backend)
+
+    _IPU_AVAILABLE = backend_module.is_available()
+
+elif _POPTORCH_AVAILABLE:
     import poptorch
-
     _IPU_AVAILABLE = poptorch.ipuHardwareIsAvailable()
 else:
-    poptorch = None
+    backend_module = None
     _IPU_AVAILABLE = False
 
 
