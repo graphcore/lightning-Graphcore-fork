@@ -53,7 +53,6 @@ def test_fail_if_no_ipus(_, tmpdir):  # noqa: PT019
         Trainer(default_root_dir=tmpdir, accelerator=IPUAccelerator(), devices=1)
 
 
-@pytest.mark.xfail()  # todo
 def test_accelerator_selected(tmpdir):
     assert IPUAccelerator.is_available()
     trainer = Trainer(default_root_dir=tmpdir, accelerator="ipu", devices=1)
@@ -581,7 +580,7 @@ def test_accelerator_ipu_with_devices():
     assert trainer.num_devices == 8
 
 
-@pytest.mark.xfail(AssertionError, reason="not implemented on PL side")
+# @pytest.mark.xfail(AssertionError, reason="not implemented on PL side")
 def test_accelerator_auto_with_devices_ipu():
     trainer = Trainer(accelerator="auto", devices=8)
     assert isinstance(trainer.accelerator, IPUAccelerator)
